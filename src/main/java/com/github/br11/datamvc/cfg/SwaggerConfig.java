@@ -1,4 +1,4 @@
-package com.github.br11.datamvc.api;
+package com.github.br11.datamvc.cfg;
 
 import static com.google.common.base.Predicates.not;
 import static springfox.documentation.builders.PathSelectors.ant;

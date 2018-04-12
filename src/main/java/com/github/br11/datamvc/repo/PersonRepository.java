@@ -8,12 +8,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.github.br11.datamvc.model.Person;
 
-import io.swagger.annotations.Api;
-
-@Api
 @RepositoryRestResource(collectionResourceRel = "people", path = "people")
 public interface PersonRepository extends PagingAndSortingRepository<Person, Long> {
 
 	List<Person> findByLastName(@Param("name") String name);
+	
+	List<Person> findByLastNameAndFirstName(@Param("lname") String lname,@Param("fname") String fname);
 
 }
