@@ -1,6 +1,7 @@
 package com.github.br11.datamvc.repo;
 
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -28,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-public class BaseControllerTest {
+public class BaseRestCrudTest {
 	private MediaType contentType = MediaType.APPLICATION_JSON_UTF8;
 
 	private MockMvc mockMvc;
@@ -52,56 +53,39 @@ public class BaseControllerTest {
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
 
-	protected <T> T testCreate(String path, T entity) throws Exception {
-		mockMvc.perform(post(path) //
+	protected String testCreate(String path, Object entity) throws Exception {
+		return mockMvc.perform(post(path) //
 				.content(this.json(entity)) //
 				.contentType(contentType)) //
-				.andExpect(status().isCreated()).andDo(print());
-
-		return entity;
+				.andExpect(status().isCreated()) //
+				.andReturn().getResponse().getRedirectedUrl();
 	}
 
-	@SuppressWarnings("unchecked")
-	protected <T> T[] testFindAll(String path, T... entities) throws Exception {
-		for (T entity : entities) {
-			testCreate(path, entity);
-		}
-
+	protected void testRetrieveAll(String path) throws Exception {
 		mockMvc.perform(get(path) //
 				.contentType(contentType)) //
 				.andExpect(status().isOk()).andDo(print());
-
-		return entities;
 	}
 
-	protected <T> T testUpdate(String path, T entityBefore, T entityAfter) throws Exception {
+	protected <T> T testUpdate(String path, T entity) throws Exception {
+		testRetrieve(path); // TODO
 
-		testCreate(path, entityBefore);
-
-		mockMvc.perform(put("/data/people/1") //
-				.content(this.json(entityAfter)) //
+		mockMvc.perform(put(path) //
+				.content(this.json(entity)) //
 				.contentType(contentType)) //
 				.andExpect(status().isNoContent());
-
-		testGet(path, 1); // TODO
-
-		return entityAfter;
-	}
-
-	protected <T> T testCreateAndGet(String path, T entity) throws Exception {
-		testCreate(path, entity);
-
-		mockMvc.perform(get(path + "/1")) // TODO
-				.andExpect(status().isOk());
 
 		return entity;
 	}
 
-	protected void testGet(String path, Object id) throws Exception {
+	protected void testRetrieve(String path) throws Exception {
+		mockMvc.perform(get(path)) //
+				.andExpect(status().isOk());
+	}
 
-		mockMvc.perform(get(path + "/" + id)) //
-				.andExpect(status().isOk()).andDo(print());
-
+	protected void testDelete(String path) throws Exception {
+		mockMvc.perform(delete(path)) //
+				.andExpect(status().isNoContent());
 	}
 
 	@SuppressWarnings("unchecked")

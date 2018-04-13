@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Person {
+public class PublicPerson {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,11 +26,11 @@ public class Person {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Address> addresses = new ArrayList<>();
 
-	public Person() {
+	public PublicPerson() {
 		this(null, null, null);
 	}
 
-	public Person(String firstName, String lastName, Integer age, Address... addresses) {
+	public PublicPerson(String firstName, String lastName, Integer age, Address... addresses) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -92,7 +92,7 @@ public class Person {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Person other = (Person) obj;
+		PublicPerson other = (PublicPerson) obj;
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.br11.datamvc.model.Person;
+import com.github.br11.datamvc.model.PublicPerson;
 import com.github.br11.datamvc.repo.PersonRepository;
 
 @RestController
@@ -19,7 +19,7 @@ public class PersonController {
 
 //	@PostMapping("/data/people")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Person create(@RequestBody Person model) {
+	public PublicPerson create(@RequestBody PublicPerson model) {
 		System.out.println(">>> PersonController <<<");
 		 
 		return personRepo.save(model);
